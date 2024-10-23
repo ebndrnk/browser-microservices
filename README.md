@@ -48,3 +48,13 @@ The application is built on a microservice architecture using the following main
 ## 📚 Project Purpose
 
 This project was created to demonstrate my skills in working with complex microservice architectures and modern development technologies. It serves as a portfolio of my technical growth and showcases my ability to design and implement sophisticated systems.
+
+##  🕸 Getting started
+- Install Docker and Docker Compose
+- Сlone deirectory elk-config from my repository
+- Сlone docker-compose files into same directory
+- Execute the command to start all services
+
+## Authors
+
+IAM
