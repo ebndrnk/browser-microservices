@@ -32,7 +32,9 @@ The application is built on a microservice architecture using the following main
 8. **Service Registry**: Eureka is used for service discovery and registration.
 9. **Log Collection**: Kafka, Logstash, and Elasticsearch form a centralized log collection and analysis system.
 
-![Infrastructure Diagram](/infrastructure-diagram.png)
+## 🥶 Infrastructure
+
+![Infrastructure Diagram](https://github.com/ebndrnk/browser-microservices/blob/master/infrastucture-diagram.png)
 
 
 ## 🎯 Project Features
