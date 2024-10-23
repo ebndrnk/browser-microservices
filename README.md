@@ -53,6 +53,7 @@ This project was created to demonstrate my skills in working with complex micros
 - Install Docker and Docker Compose
 - Сlone deirectory elk-config from my repository
 - Сlone docker-compose files into same directory
+- Enter your aws secret-key in the appropriate line
 - Execute the command to start all services
 - Go to the localhost:8765
 
