@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Браузер</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .profile-photo {
+            width: 100px; /* Ширина круга */
+            height: 100px; /* Высота круга */
+            border-radius: 50%; /* Делает фото круглым */
+            overflow: hidden; /* Скрывает часть изображения, выходящую за границы */
+            margin-bottom: 20px; /* Отступ снизу */
+        }
+
+        .profile-photo img {
+            width: 100%; /* Заполняет ширину контейнера */
+            height: 100%; /* Заполняет высоту контейнера */
+            object-fit: cover; /* Заполняет круг без искажений */
+        }
+    </style>
+</head>
+<body>
+
+<h1 th:text="${name}"></h1>
+<h1>Добро пожаловать в Браузер!</h1>
+
+<div th:if="${photoExist}" class="profile-photo">
+    <img th:src="@{/api/photos/get-photo}">
+</div>
+
+<div class="icons">
+    <a href="#" th:href="@{/index/settings}" class="settings-icon" title="Настройки">
+        <i class="fas fa-cog"></i>
+    </a>
+
+    <a href="#" th:href="@{/auth}" class="login-icon" title="Авторизация">
+        <i class="fas fa-user"></i>
+    </a>
+</div>
+
+<form th:action="@{/index/search}" method="GET">
+    <input type="text" name="query" placeholder="Введите ваш запрос..." required>
+    <input type="submit" value="Поиск">
+</form>
+
+<script th:src="@{/js/scripts.js}"></script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Страница пользователя</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            background-color: #fafafa;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            gap: 20px;
+        }
+        .user-info {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1;
+            text-align: center;
+        }
+        .user-info img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+        .user-info h1 {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+        .upload-button {
+            display: inline-block;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .upload-button input {
+            display: none;
+        }
+        .camera-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 2em;
+        }
+        .user-info button {
+            background-color: #3897f0;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .user-info button:hover {
+            background-color: #007bbf;
+        }
+        .history {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 2;
+        }
+        .history h2 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .history div {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+            border-top: 1px solid #eaeaea;
+            padding-top: 10px;
+        }
+        .delete-icon {
+            color: grey;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: color 0.3s;
+        }
+        .delete-icon:hover {
+            color: red;
+        }
+        .delete-all-icon {
+            color: grey;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .delete-all-icon:hover {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="user-info" th:object="${user}">
+        <h1><span th:text="${user.getUsername()}">Имя пользователя</span></h1>
+
+        <div class="upload-button" onclick="document.getElementById('fileInput').click();">
+            <img id="profileImage" src="#" alt="Profile Image" style="display: none;">
+            <i class="fas fa-camera camera-icon"></i>
+            <input type="file" id="fileInput" accept="image/*" onchange="uploadFile()">
+        </div>
+
+        <button th:if="${photoExist}" th:classappend="'remove-button'" onclick="deleteProfileImage()">Удалить</button>
+        <a th:href="@{/index}"><button> Назад </button></a>
+        <a th:href="@{/logout}"><button> Выйти </button></a>
+    </div>
+
+    <div class="history">
+        <h2>
+            История поиска
+            <i class="fas fa-trash delete-all-icon" onclick="deleteAllRequests()" title="Удалить всю историю"></i>
+        </h2>
+        <ul>
+            <li th:each="request : ${history}" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <a th:href="@{/index/search(query=${request.getRequest()})}" style="flex: 1;">
+                    <span th:text="${request.getRequest()}">Название запроса</span>
+                </a>
+                <span th:text="${#temporals.format(request.getTimestamp(), 'dd.MM.yyyy HH:mm')}">Дата</span>
+                <i class="fas fa-trash delete-icon" th:onclick="'deleteRequest(' + ${request.getId()} + ')'"></i>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        const profileImage = document.getElementById('profileImage');
+
+        // Загружаем изображение при загрузке страницы
+        fetch('/api/photos/get-photo')
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    throw new Error("Не удалось загрузить изображение.");
+                }
+            })
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                profileImage.src = url;
+                profileImage.style.display = 'block';
+            })
+            .catch(err => {
+                console.warn(err); // Не выводим ошибку, если фото нет
+            });
+    };
+
+    function uploadFile() {
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+        if (!file) {
+            alert("Пожалуйста, выберите файл для загрузки.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/api/photos/add-photo', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const profileImage = document.getElementById('profileImage');
+                        profileImage.src = e.target.result;
+                        profileImage.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                    alert("Фото загружено успешно.");
+                    location.reload();
+                } else {
+                    alert("Ошибка при загрузке фото.");
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Ошибка сети.");
+            });
+    }
+
+    function deleteProfileImage() {
+        if (confirm("Вы уверены, что хотите удалить свою фотографию?")) {
+            fetch('/api/photos/delete-photo', {
+                method: 'POST'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Фотография успешно удалена.");
+                        // Обновляем изображение и кнопку
+                        const profileImage = document.getElementById('profileImage');
+                        profileImage.src = '';
+                        profileImage.style.display = 'none';
+                        const removeButton = document.querySelector('.remove-button');
+                        if (removeButton) {
+                            removeButton.remove();
+                        }
+                    } else {
+                        alert("Ошибка при удалении фотографии.");
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Ошибка сети.");
+                });
+        }
+    }
+
+    function deleteRequest(requestId) {
+        if (confirm("Вы уверены, что хотите удалить этот запрос?")) {
+            fetch(`/user-page/delete-request/${requestId}`, {
+                method: 'POST'
+            })
+                .then(() => {
+                        alert("Запрос удалён.");
+                        location.reload();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Ошибка сети.");
+                });
+        }
+    }
+
+    function deleteAllRequests() {
+        if (confirm("Вы уверены, что хотите удалить всю историю поиска?")) {
+            fetch('/user-page/delete-history', {
+                method: 'POST'
+            })
+                .then(() => {
+                        alert("Вся история удалена.");
+                        location.reload();
+                    })
+                .catch(err => {
+                    console.error(err);
+                    alert("Ошибка сети.");
+                });
+        }
+    }
+</script>
+
+</body>
+</html>

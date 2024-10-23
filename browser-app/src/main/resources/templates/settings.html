@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройки</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .back-button {
+            text-decoration: none;
+            color: #4CAF50; /* Цвет текста кнопки "Назад" */
+            font-size: 20px; /* Размер шрифта */
+            position: absolute; /* Позиционирование */
+            top: 20px; /* Отступ сверху */
+            left: 20px; /* Отступ слева */
+        }
+
+        .back-button:hover {
+            text-decoration: underline; /* Подчеркивание при наведении */
+        }
+    </style>
+</head>
+<body>
+
+<a href="/index" class="back-button">← Назад</a> <!-- Стрелка назад -->
+
+<h2>Настройки</h2>
+<form id="settingsForm">
+    <label for="backgroundColor">Цвет фона:</label>
+    <input type="color" id="backgroundColor" name="backgroundColor" value="#f0f0f0">
+
+    <label for="textColor">Цвет текста:</label>
+    <input type="color" id="textColor" name="textColor" value="#000000">
+
+    <label for="buttonColor">Цвет кнопки "Поиск":</label>
+    <input type="color" id="buttonColor" name="buttonColor" value="#4CAF50">
+
+    <input type="submit" value="Сохранить настройки">
+</form>
+
+<script th:src="@{/js/scripts.js}"></script>
+<script>
+    // Установка значений из localStorage при загрузке страницы
+    window.onload = function() {
+        const savedBackgroundColor = localStorage.getItem('backgroundColor');
+        const savedTextColor = localStorage.getItem('textColor');
+        const savedButtonColor = localStorage.getItem('buttonColor');
+
+        if (savedBackgroundColor) {
+            document.body.style.backgroundColor = savedBackgroundColor;
+            document.getElementById('backgroundColor').value = savedBackgroundColor; // Установка цвета фона
+        }
+        if (savedTextColor) {
+            document.body.style.color = savedTextColor;
+            const headings = document.querySelectorAll('h1, h2'); // Цвет заголовков
+            headings.forEach(heading => {
+                heading.style.color = savedTextColor;
+            });
+            document.getElementById('textColor').value = savedTextColor; // Установка цвета текста
+        }
+        if (savedButtonColor) {
+            const searchButton = document.querySelector('input[type="submit"]');
+            searchButton.style.backgroundColor = savedButtonColor;
+            searchButton.style.color = 'white'; // Убедитесь, что текст на кнопке виден
+            document.getElementById('buttonColor').value = savedButtonColor; // Установка цвета кнопки
+        }
+    };
+</script>
+</body>
+</html>

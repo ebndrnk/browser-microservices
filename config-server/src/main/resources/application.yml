@@ -1,0 +1,26 @@
+spring:
+  security:
+    user:
+      password: config-password
+      name: config
+      roles:
+        - CONFIG
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/ebndrnk/browser-config
+server:
+  port: 8888
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka

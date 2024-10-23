@@ -1,0 +1,77 @@
+version: "3"
+services:
+
+  eureka-server:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: eureka-server/target/eureka-server-0.0.1-SNAPSHOT.jar
+    ports:
+      - '8761:8761'
+    networks:
+      - browser
+
+  config-server:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: config-server/target/config-server-0.0.1-SNAPSHOT.jar
+    ports:
+      - '8888:8888'
+    networks:
+      - browser
+
+  api-gateway:
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: api-gateway/target/api-gateway-0.0.1-SNAPSHOT.jar
+    ports:
+      - '8765:8765'
+    networks:
+      - browser
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - browser
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: no
+    networks:
+      - browser
+
+  browser-app:
+    build:
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: browser-app/target/browser-app-0.0.1-SNAPSHOT.jar
+    networks:
+      - browser
+    environment:
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+    deploy:
+      replicas: 3
+
+
+
+networks:
+  browser:
+    driver: bridge
+
+
+

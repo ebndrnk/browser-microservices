@@ -1,0 +1,76 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0; /* Значение по умолчанию */
+    font-family: Arial, sans-serif;
+}
+
+h1, h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.icons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px; /* Отступ между иконками и формой */
+}
+
+.settings-icon, .login-icon {
+    font-size: 30px; /* Размер иконок */
+    color: #333; /* Цвет иконок */
+    text-decoration: none; /* Убираем подчеркивание */
+    margin: 0 15px; /* Отступы между иконками */
+}
+
+.settings-icon:hover, .login-icon:hover {
+    color: #4CAF50; /* Цвет при наведении */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Выравнивание формы по центру */
+}
+
+label {
+    margin-top: 10px; /* Отступ сверху */
+    margin-bottom: 5px; /* Отступ снизу */
+    font-weight: bold; /* Жирный шрифт для удобства */
+}
+
+input[type="text"], input[type="color"] {
+    width: 300px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+input[type="color"] {
+    height: 40px; /* Увеличиваем высоту поля выбора цвета */
+    border: none; /* Убираем границу */
+    cursor: pointer; /* Указываем, что это кнопка */
+}
+
+input[type="submit"] {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50; /* Значение по умолчанию */
+    color: white;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+

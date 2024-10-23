@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: ebndnrk/browser-api-gateway
+          ports:
+            - containerPort: 8765
+          env:
+            - name: EUREKA_CLIENT_FETCH_REGISTRY
+              value: "true"
+            - name: EUREKA_CLIENT_REGISTER_WITH_EUREKA
+              value: "true"
+            - name: SPRING_CLOUD_GATEWAY_ROUTES_0_ID
+              value: "browser-app-route"
+            - name: SPRING_CLOUD_GATEWAY_ROUTES_0_URI
+              value: "http://browser-app:8080"
+            - name: SPRING_CLOUD_GATEWAY_ROUTES_0_PREDICATES_0
+              value: "Path=/"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+spec:
+  type: NodePort
+  ports:
+    - port: 8765
+      targetPort: 8765
+  selector:
+    app: api-gateway
