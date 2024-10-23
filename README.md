@@ -32,6 +32,9 @@ The application is built on a microservice architecture using the following main
 8. **Service Registry**: Eureka is used for service discovery and registration.
 9. **Log Collection**: Kafka, Logstash, and Elasticsearch form a centralized log collection and analysis system.
 
+![Infrastructure Diagram](/infrastructure-diagram.png)
+
+
 ## 🎯 Project Features
 
 - Security: Spring Security provides protection, including optional user registration.
