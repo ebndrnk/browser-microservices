@@ -3,10 +3,7 @@ services:
 
   eureka-server:
     restart: always
-    build:
-      dockerfile: Dockerfile
-      args:
-        JAR_FILE: eureka-server/target/eureka-server-0.0.1-SNAPSHOT.jar
+    image: ebndnrk/browser-eureka-server
     ports:
       - '8761:8761'
     networks:
@@ -14,20 +11,14 @@ services:
 
   config-server:
     restart: always
-    build:
-      dockerfile: Dockerfile
-      args:
-        JAR_FILE: config-server/target/config-server-0.0.1-SNAPSHOT.jar
+    image: ebndnrk/browser-config-server
     ports:
       - '8888:8888'
     networks:
       - browser
 
   api-gateway:
-    build:
-      dockerfile: Dockerfile
-      args:
-        JAR_FILE: api-gateway/target/api-gateway-0.0.1-SNAPSHOT.jar
+    image: ebndnrk/browser-api-gateway
     ports:
       - '8765:8765'
     networks:
@@ -56,10 +47,7 @@ services:
       - browser
 
   browser-app:
-    build:
-      dockerfile: Dockerfile
-      args:
-        JAR_FILE: browser-app/target/browser-app-0.0.1-SNAPSHOT.jar
+    image: ebndnrk/browser-browser-app
     networks:
       - browser
     environment:
