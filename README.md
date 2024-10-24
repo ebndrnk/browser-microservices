@@ -57,6 +57,6 @@ This project was created to demonstrate my skills in working with complex micros
 - Execute the command to start all services
 - Go to the localhost:8765
 
-## Authors
+## 🤕 Authors
 
 IAM
